@@ -131,7 +131,17 @@ jobs:
 
       - name: Verify pod CWAgent image
         run: |
-          kubectl get pods -n amazon-cloudwatch --output json | \
+          kubectl get pods -n amazon-cloudwatch -l app.kubernetes.io/name=cloudwatch-agent -o json | \
+          jq '.items[0].status.containerStatuses[0].imageID'
+
+      - name: Log pod CWAgent Operator image ID
+        run: |
+          kubectl get pods -n amazon-cloudwatch -l app.kubernetes.io/name=amazon-cloudwatch-observability -o json | \
+          jq '.items[0].status.containerStatuses[0].imageID'
+
+      - name: Log pod FluentBit image ID
+        run: |
+          kubectl get pods -n amazon-cloudwatch -l k8s-app=fluent-bit -o json | \
           jq '.items[0].status.containerStatuses[0].imageID'
 
       - name: Get the sample app endpoint
@@ -159,10 +169,10 @@ jobs:
       - name: Call all test APIs
         continue-on-error: true
         run: |
-          curl -S -s -o /dev/null http://${{ env.APP_ENDPOINT }}/outgoing-http-call/
-          curl -S -s -o /dev/null http://${{ env.APP_ENDPOINT }}/aws-sdk-call/
-          curl -S -s -o /dev/null http://${{ env.APP_ENDPOINT }}/remote-service?ip=${{ env.REMOTE_SERVICE_IP }}/
-          curl -S -s -o /dev/null http://${{ env.APP_ENDPOINT }}/client-call/
+          curl -S -s http://${{ env.APP_ENDPOINT }}/outgoing-http-call/
+          curl -S -s http://${{ env.APP_ENDPOINT }}/aws-sdk-call/
+          curl -S -s http://${{ env.APP_ENDPOINT }}/remote-service?ip=${{ env.REMOTE_SERVICE_IP }}/
+          curl -S -s http://${{ env.APP_ENDPOINT }}/client-call/
 
       # Validation for app signals telemetry data
       - name: Validate generated EMF logs
