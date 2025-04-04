@@ -12,7 +12,9 @@ Follow the EKS setup in main [README](https://github.com/aws-observability/appli
 ## Demo Steps
 1. Go to Service and scroll down to the list of services deployed in the account. Select the `payment-service-dotnet` service.
 
-![img.png](imgs/exclusion_window_img_1.png
+<<<<<<< HEAD
+![img.png](imgs/exclusion_window_img_1.png)
+>>>>>>> cf826e5 (Feature: Update the payment-service-dotnet service to include an example SLO with a exclusion window created)
 
 2. Click into the selected service. View all SLOs on the `GET /owners/{ownerId:int}/pets/{petId:int}/payments` operation.
 
